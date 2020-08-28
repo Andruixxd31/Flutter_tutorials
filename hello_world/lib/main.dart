@@ -26,7 +26,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String text = "";
+
+  void changeText(String text) {
+    this.setState(() {
+      this.text = text;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     //we need to return a widget
     //Scaffold can hold other widgets inside it
@@ -35,16 +49,11 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           title: Text("Hello World!"),
         ),
-        body: TextInputWidget()
-
-        //* Example of a Column Widget with a Type Widget list
-        //Column Widget to organize the widgets from the list type Widget
-        // body: Column(children: <Widget>[
-        //   TestWidget(),
-        //   TestWidget(),
-        //   TestWidget()
-        // ]), //AppBar and title is a widget
-        );
+        body: Column(
+          //we omith the () in changeText to not call the function and have
+          //it in a variable instead that will be passed to callback
+          children: <Widget>[TextInputWidget(this.changeText), Text(this.text)],
+        ));
     //* Flutter show its own comments to show where widgets ends
   }
 }
@@ -53,8 +62,13 @@ class MyHomePage extends StatelessWidget {
 // Has two classes
 // 1 takes constructor arguments
 // 2 class handles the state
-
 class TextInputWidget extends StatefulWidget {
+  final Function(String) callback;
+
+  //Constructor
+  //Callback will be equal to the function changeText
+  TextInputWidget(this.callback);
+
   @override
   _TextInputWidgetState createState() => _TextInputWidgetState();
 }
@@ -63,8 +77,6 @@ class TextInputWidget extends StatefulWidget {
 //The widget is rendered once by the program we need to updated to show changes
 class _TextInputWidgetState extends State<TextInputWidget> {
   final controller = TextEditingController();
-  String text = " ";
-
   //When we disposed the widget we clean the controller inside it
   @override
   void dispose() {
@@ -72,23 +84,26 @@ class _TextInputWidgetState extends State<TextInputWidget> {
     controller.dispose(); //dispose the controller
   }
 
-  void changeText(text) {
-    setState(() {
-      //changes the states and forces to refresh the widget
-      this.text = text;
-    });
+  void click() {
+    //widget accesses the class TextInputWidget
+    widget.callback(controller.text);
+    //clears the input field
+    controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      TextField(
-          controller: this.controller,
-          decoration: InputDecoration(
-              prefixIcon: Icon(Icons.message), labelText: "Type a message"),
-          onChanged: (text) => this.changeText(text)),
-      Text(this.text)
-    ]);
+    return TextField(
+        controller: this.controller,
+        decoration: InputDecoration(
+            prefixIcon: Icon(Icons.message),
+            labelText: "Type a message",
+            suffixIcon: IconButton(
+              icon: Icon(Icons.send),
+              splashColor: Colors.deepOrange,
+              tooltip: "post message",
+              onPressed: this.click,
+            )));
   }
 }
 
