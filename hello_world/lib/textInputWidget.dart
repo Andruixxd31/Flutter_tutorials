@@ -4,7 +4,7 @@ class TextInputWidget extends StatefulWidget {
   final Function(String) callback;
 
   //Constructor
-  //Callback will be equal to the function changeText
+  //Callback will be equal to the function newPost
   TextInputWidget(this.callback);
 
   @override

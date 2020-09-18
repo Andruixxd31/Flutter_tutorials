@@ -31,11 +31,3 @@ class MyApp extends StatelessWidget {
 // Has two classes
 // 1 takes constructor arguments
 // 2 class handles the state
-
-//* Another Example of a StatelessWidget
-// class TestWidget extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text("Hello World Again");
-//   }
-// }
